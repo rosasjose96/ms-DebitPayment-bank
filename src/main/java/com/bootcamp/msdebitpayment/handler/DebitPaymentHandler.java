@@ -13,6 +13,8 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
+import java.net.URI;
+
 @Component
 public class DebitPaymentHandler {
 
@@ -120,7 +122,7 @@ public class DebitPaymentHandler {
                         })
                         .flatMap(transfer ->  service.create(debitpaymentRequest)))
                 .flatMap( c -> ServerResponse
-                        .ok()
+                        .created(URI.create("/api/debitPayment/origin/19198789115082"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(BodyInserters.fromValue(c)))
                 .switchIfEmpty(ServerResponse.notFound().build());

@@ -1,13 +1,14 @@
 package com.bootcamp.msdebitpayment;
 
 import com.bootcamp.msdebitpayment.models.entities.DebitPayment;
-import com.bootcamp.msdebitpayment.repositories.DebitPaymentRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.reactive.function.BodyInserters;
 
 import java.util.Collections;
 
@@ -58,6 +59,26 @@ class MsDebitPaymentBankApplicationTests {
 				.jsonPath("$.originAccount").isEqualTo("19198789115082")
 				.jsonPath("$.amount").isNotEmpty()
 				.jsonPath("$.destinationCredit").isEqualTo("5637856547");
+	}
+
+	@Test
+	void whenCreateDebitPayment_thenReturnHttpCode(){
+		client.post().uri("/api/debitPayment")
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
+				.body(BodyInserters.fromValue(DebitPayment.builder()
+						.originAccount("19198789115082").originTypeOfAccount("SAVING_ACCOUNT")
+						.amount(150.0).destinationCredit("5637856547").destinationTypeOfCredit("CREDIT").build()))
+				.exchange()
+				.expectStatus().isCreated()
+				.expectHeader().contentType(MediaType.APPLICATION_JSON)
+				.expectBody(DebitPayment.class)
+				.consumeWith(response -> {
+					DebitPayment payment = response.getResponseBody();
+
+					Assertions.assertTrue(payment.getOriginAccount().equals("19198789115082"));
+					Assertions.assertTrue(payment.getDestinationCredit().equals("5637856547"));
+				});
 	}
 
 }
