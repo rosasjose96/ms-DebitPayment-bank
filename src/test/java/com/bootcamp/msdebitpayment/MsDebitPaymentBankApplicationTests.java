@@ -19,7 +19,7 @@ class MsDebitPaymentBankApplicationTests {
 	private WebTestClient client;
 
 	@Test
-	void contextLoads() {
+	void whenFindAll_thenReturnListDebitPayment() {
 
 		client.get()
 				.uri("/api/debitPayment")
@@ -41,6 +41,23 @@ class MsDebitPaymentBankApplicationTests {
 				.expectHeader().contentType(MediaType.APPLICATION_JSON)
 				.expectBodyList(DebitPayment.class)
 				.hasSize(3);
+	}
+
+	/**
+	 * Method validating a json path
+	 */
+	@Test
+	void whenFindById_thenReturnMonoDebitPayment(){
+		client.get()
+				.uri("/api/debitPayment/{id}", Collections.singletonMap("id","6123458bbb00ff26e7eb1aff"))
+				.accept(MediaType.APPLICATION_JSON)
+				.exchange()
+				.expectStatus().isOk()
+				.expectHeader().contentType(MediaType.APPLICATION_JSON)
+				.expectBody()
+				.jsonPath("$.originAccount").isEqualTo("19198789115082")
+				.jsonPath("$.amount").isNotEmpty()
+				.jsonPath("$.destinationCredit").isEqualTo("5637856547");
 	}
 
 }

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 
@@ -27,4 +28,19 @@ public class DebitPaymentRepositoryMockTest {
         Flux<DebitPayment> founds = repository.findAll();
         StepVerifier.create(founds.log()).expectNextCount(6).verifyComplete();
     }
+
+//    @Test
+//    public void whenSave_thenValidateDebitPayment(){
+//        repository.save(DebitPayment.builder().id("12345").originAccount("19198789115082")
+//                .originTypeOfAccount("SAVING_ACCOUNT")
+//                .amount(125.0).destinationCredit("5637856547")
+//                .destinationTypeOfCredit("CREDIT").build()).subscribe();
+//
+//        Mono<DebitPayment> debitPayment = repository.findById("12345");
+//
+//        StepVerifier.create(debitPayment).expectNext(DebitPayment.builder().id("12345").originAccount("19198789115082")
+//                .originTypeOfAccount("SAVING_ACCOUNT")
+//                .amount(125.0).destinationCredit("5637856547")
+//                .destinationTypeOfCredit("CREDIT").build()).verifyComplete();
+//    }
 }
