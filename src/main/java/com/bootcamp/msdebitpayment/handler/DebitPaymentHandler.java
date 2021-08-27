@@ -14,6 +14,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
+import java.time.LocalDateTime;
 
 @Component
 public class DebitPaymentHandler {
@@ -118,6 +119,7 @@ public class DebitPaymentHandler {
                                     .typeoftransaction("PAYMENT").typeOfAccount(debitpaymentRequest.getOriginTypeOfAccount())
                                             .identityNumber(debitpaymentRequest.getOriginAccount()).customerIdentityNumber(originAccount.getCustomerIdentityNumber())
                                     .transactionAmount(debitpaymentRequest.getAmount()).destination(debitpaymentRequest.getDestinationCredit())
+                                            .dateOperation(LocalDateTime.now())
                                     .transactionDescription("PAYMENT OF A ACTIVE PRODUCT BY A PASIVE PRODUCT").build());
                         })
                         .flatMap(transfer ->  service.create(debitpaymentRequest)))
